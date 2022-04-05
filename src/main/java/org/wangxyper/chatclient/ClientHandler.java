@@ -39,8 +39,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<HashMap> {
                 try {
                     Player player = new Player(s);
                     System.out.println("[Player] playing...");
-                    player.play(Integer.MAX_VALUE);
-                    Thread.sleep(Long.MAX_VALUE);
+                    player.play();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -93,7 +92,10 @@ public class ClientHandler extends SimpleChannelInboundHandler<HashMap> {
         if(msg.get("head").equals("MUSIC")){
             if(!players.isEmpty()){
                 for(Thread t : players){
-                    t.interrupt();
+                    //check if thread is alive
+                    if(t.isAlive()){
+                        t.stop();
+                    }
                     players.remove(t);
                 }
             }
