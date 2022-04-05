@@ -32,18 +32,27 @@ public class Main {
                         }
                     });
 
-            ChannelFuture future = b.connect("server.mcnatural.top", 192).sync();
-            HashMap h = new HashMap();
-            h.put("head","REG");
-            h.put("username","JL_NPE");
-            h.put("password","2333");
-            future.channel().writeAndFlush(h);
+            ChannelFuture future = b.connect("server.mcnatural.top", 1900).sync();
             Scanner scanner = new Scanner(System.in);
+            HashMap packetAccess = new HashMap();
+            System.out.println("Input your access action,Login:L Register: R");
+            switch (scanner.nextLine()) {
+                case "L" -> packetAccess.put("head", "LOGIN");
+                case "R" -> packetAccess.put("head", "REG");
+                default -> packetAccess.put("head", "LOGIN");
+            }
+            System.out.println("Enter your username");
+            String username = scanner.nextLine();
+            System.out.println("Enter your password");
+            String password = scanner.nextLine();
+            packetAccess.put("username",username);
+            packetAccess.put("password",password);
+            future.channel().writeAndFlush(packetAccess);
             while (scanner.hasNext()){
-                HashMap a = new HashMap();
-                a.put("head","CHAT");
-                a.put("chatmessage",scanner.nextLine());
-                future.channel().writeAndFlush(a);
+                HashMap message = new HashMap();
+                message.put("head","CHAT");
+                message.put("chatmessage",scanner.nextLine());
+                future.channel().writeAndFlush(message);
             }
             try {
                 future.channel().closeFuture().sync();
